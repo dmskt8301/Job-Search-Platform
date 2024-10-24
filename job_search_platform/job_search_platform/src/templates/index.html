@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Search Platform</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+          integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background-color: #f8f9fa; /* Bootstrap default light grey background color */
+        }
+        h1, h2 {
+            font-weight: lighter;
+            color: #333; /* Dark grey color */
+            margin-bottom: 2rem;
+        }
+        h1 {
+            font-size: 128px; /* Larger font for "Job Search" */
+        }
+        h2 {
+            text-indent: 512px; /* Indentation for "Platform" */
+            font-size: 96px; /* Slightly smaller font for "Platform" */
+            margin-bottom: 5rem;
+        }
+        .btn-group {
+            margin-top: 30px;
+        }
+        .btn {
+            margin: 20px;
+            padding: 20px 20px;
+            font-size: 32px;
+            color: #3f3f3f; /* Dark grey color */
+        }
+        .btn-container {
+            margin-right: 15rem;
+        }
+        .btn-container p {
+            font-size: 2.5rem;
+        }
+        .l-btn-container {
+            margin-left: 20rem;
+        }
+        .btn-select-role {
+            border-color: #333; /* Dark grey border color */
+        }
+        .btn-select-role:hover {
+            background-color: #333; /* Dark grey background color on hover */
+            color: #fff; /* White text on hover */
+        }
+        .container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container h1 {
+            font-size: 128px;
+            padding: 0.5rem;
+            font-weight: bold;
+            letter-spacing: 0.1rem;
+            text-align: center;
+            overflow: hidden;
+        }
+        .container h1 span.typed-text {
+            font-weight: normal;
+            color: #808080;
+        }
+        .container h1 span.cursor {
+            display: inline-block;
+            background-color: #ccc;
+            margin-left: 0.1rem;
+            width: 3px;
+            animation: blink 1s infinite;
+        }
+        .container h1 span.cursor.typing {
+            animation: none;
+        }
+        @keyframes blink {
+            0%  { background-color: #ccc; }
+            49% { background-color: #ccc; }
+            50% { background-color: transparent; }
+            99% { background-color: transparent; }
+            100%  { background-color: #ccc; }
+        }
+        @media (max-width: 992px) {
+            h1, h2 {
+                font-size: 64px;
+            }
+            h2 {
+                text-indent: 80px; /* Reduce indentation on small screens */
+            }
+            .container h1 {
+                font-size: 64px;
+            }
+            .btn {
+                margin: 15px;
+                padding: 10px 10px;
+                font-size: 24px;
+            }
+            .btn-container p {
+                font-size: 1.5rem;
+            }
+        }
+        @media (max-width: 576px) {
+            h1, h2 {
+                font-size: 56px;
+            }
+        
+            h2 {
+                text-indent: 72px; /* Reduce indentation on small screens */
+            }
+        
+            .container h1 {
+                font-size: 56px;
+            }
+        
+            .btn {
+                margin: 5px;
+                padding: 5px 10px;
+                font-size: 14px;
+            }
+        
+            .btn-container {
+                margin-right: 5rem;
+            }
+        
+            .btn-container p {
+                font-size: 1rem;
+            }
+        
+            .l-btn-container {
+                margin-left: 6rem;
+            }
+        }
+        
+        
+    </style>
+
+</head>
+<body>
+    <div class="container text-center d-flex flex-column justify-content-center" style="height: 100vh;">
+        <h1>Job <span class="typed-text"></span><span class="cursor">&nbsp;</span></h1>
+        <h2>Platform</h2>
+
+        <div class="btn-group mt-4 justify-content-center">
+            <div class="btn-container l-btn-container">
+                <p>Post a Job</p>
+                <button id="employerBtn" class="btn btn-select-role rounded-pill">Employer</button>
+            </div>
+    
+            <div class="btn-container">
+                <p>Get a Job</p>
+                <button id="employeeBtn" class="btn btn-select-role rounded-pill">Employee</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const typedTextSpan = document.querySelector(".typed-text");
+        const cursorSpan = document.querySelector(".cursor");
+        
+        const textArray = ["Searching", "Posting"];
+        const typingDelay = 200;
+        const erasingDelay = 100;
+        const newTextDelay = 2000; // Delay between current and next text
+        let textArrayIndex = 0;
+        let charIndex = 0;
+        
+        function type() {
+          if (charIndex < textArray[textArrayIndex].length) {
+            if(!cursorSpan.classList.contains("typing")) cursorSpan.classList.add("typing");
+            typedTextSpan.textContent += textArray[textArrayIndex].charAt(charIndex);
+            charIndex++;
+            setTimeout(type, typingDelay);
+          } 
+          else {
+            cursorSpan.classList.remove("typing");
+          	setTimeout(erase, newTextDelay);
+          }
+        }
+        function erase() {
+        	if (charIndex > 0) {
+            if(!cursorSpan.classList.contains("typing")) cursorSpan.classList.add("typing");
+            typedTextSpan.textContent = textArray[textArrayIndex].substring(0, charIndex-1);
+            charIndex--;
+            setTimeout(erase, erasingDelay);
+          } 
+          else {
+            cursorSpan.classList.remove("typing");
+            textArrayIndex++;
+            if(textArrayIndex>=textArray.length) textArrayIndex=0;
+            setTimeout(type, typingDelay + 1100);
+          }
+        }
+        document.addEventListener("DOMContentLoaded", function() { // On DOM Load initiate the effect
+          if(textArray.length) setTimeout(type, newTextDelay + 250);
+        });
+
+        // Redirect to login dashboards
+        document.getElementById('employerBtn').addEventListener('click', function() {
+            window.location.href = '/employer';
+        });
+        document.getElementById('employeeBtn').addEventListener('click', function() {
+            window.location.href = '/employee';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{% extends "employee/layout.html" %}
+{% block body %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+               <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                   {{ message }}
+                   <div type="button" class="close" data-dismiss="alert" aria-label="Close">
+                       <span aria-hidden="true">&times;</span>
+                   </div>
+               </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <a href="/logout" class="btn btn-info btn-lg float-right">
+        <span class="glyphicon glyphicon-log-out"></span> Log out
+    </a>
+
+    <h2 class="mb-4">Employee Job Search</h2>
+
+    <!-- Search Bar -->
+    <div class="mb-4">
+        <input type="text" class="form-control" placeholder="Search for jobs..." id="jobSearchInput">
+    </div>
+
+    <!-- Results Table -->
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Location</th>
+                <th>Salary <p style="font-size: 0.5rem;">(per annum)</p></th>
+                <th>Skills Required</th>
+                <th>Date Posted</th>
+                <th>Expiry Date</th>
+                <th>Filled</th>
+                <th>Apply</th>
+            </tr>
+        </thead>
+        <tbody id="jobListings">
+            {% for job in jobs %}
+            <tr>
+                <td>{{ job['job_title'] }}</td>
+                <td>{{ job['job_description'] }}</td>
+                <td>{{ job['location'] }}</td>
+                <td>${{ job['salary'] }}</td>
+                <td>{{ job['skillsRequired'] }}</td>
+                <td>{{ job['datePosted'] }}</td>
+                <td>{{ job['expiryDate'] }}</td>
+                <td>{{ job['isFilled'] }}</td>
+                <td><a class="btn btn-primary" href="mailto:{{ job['email'] }}?subject=Job Application for {{ job['job_title'] }}">Apply</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        $(document).ready(function() {
+            $("#jobSearchInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#jobListings tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+    </script>
+
+{% endblock %}

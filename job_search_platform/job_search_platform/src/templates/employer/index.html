@@ -1,0 +1,61 @@
+{% extends "employer/layout.html" %}
+{% block body %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+               <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                   {{ message }}
+                   <div type="button" class="close" data-dismiss="alert" aria-label="Close">
+                       <span aria-hidden="true">&times;</span>
+                   </div>
+               </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <a href="/logout" class="btn btn-info btn-lg float-right">
+        <span class="glyphicon glyphicon-log-out"></span> Log out
+    </a>
+
+    <h2 class="mb-4">Employer Dashboard</h2>
+    
+    <!-- Add a button for creating a new job post -->
+    <a class="btn btn-primary mb-4" href="/employer/add-job">Add New Job Post</a>
+    
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Location</th>
+                <th>Salary <p style="font-size: 0.5rem;">(per annum)</p></th>
+                <th>Skills Required</th>
+                <th>Date Posted</th>
+                <th>Expiry Date</th>
+                <th>Filled</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job_id, job in jobs %}
+            <tr>
+                <td>{{ job['job_title'] }}</td>
+                <td>{{ job['job_description'] }}</td>
+                <td>{{ job['location'] }}</td>
+                <td>${{ job['salary'] }}</td>
+                <td>{{ job['skillsRequired'] }}</td>
+                <td>{{ job['datePosted'] }}</td>
+                <td>{{ job['expiryDate'] }}</td>
+                <td>{{ job['isFilled'] }}</td>
+                <td>
+                    <a class="btn btn-sm btn-info" href="/edit/jobs/{{ job_id }}">Edit</a>
+                    <a class="btn btn-sm btn-danger" href="/delete/jobs/{{ job_id }}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+{% endblock %}

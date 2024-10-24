@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Registration & Login Page</title>
+
+    <style>
+        /* Additional styles for half-split layout */
+        .half-page {
+            display: flex;
+            height: 100vh; /* Full viewport height */
+            font-family: 'Inter', sans-serif;
+        }
+        .half-page .register, .half-page .login {
+            flex: 1; /* Each half takes 50% of the width */
+            display: flex;
+            align-items: center; /* Center the form vertically */
+            justify-content: center; /* Center the form horizontally */
+            padding: 20px; /* Some padding around the form */
+        }
+        .half-page .login {
+            background-color: #333;
+        }
+        .card-style {
+            border: 1px solid #e0e0e0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            max-height: 550px;
+            width: 100%;
+            height: 100%
+        }
+        .login .card-style {
+            background-color: black;
+            color: white;
+        }
+        .card-content {
+            display: flex;
+            justify-content: center;
+        }
+
+        .card-button {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center the button within the right half */
+        }
+
+        .btn-position-right {
+            display: block;
+            margin-left: auto;
+            margin-top: 10%;
+        }
+
+        h2 {
+            font-size: 54px;
+            margin-top: 10%;
+        }
+
+        .login .form-group input {
+            color: white;
+            background-color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .half-page {
+                flex-direction: column;
+                align-items: center;
+            }
+        
+            .register, .login {
+                width: 100%; /* Take full width on smaller screens */
+                height: auto; /* Adjust height automatically */
+                padding: 10px 0; /* Add some vertical padding for spacing */
+            }
+        
+            .card-style {
+                width: 80%; /* Set width to be 80% of the screen on smaller devices */
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+               <div class="alert alert-{{ category }} alert-dismissible fixed-top float mr-3 ml-3 mt-3" role="alert">
+                   {{ message }}
+                   <div type="button" class="close" data-dismiss="alert" aria-label="Close">
+                       <span aria-hidden="true">&times;</span>
+                   </div>
+               </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="half-page">
+
+        <!-- Register Form -->
+        <div class="register">
+            <div class="card-style">
+                <h2 class="text-center mb-4">Register</h2>
+                <div class="card-content" style="margin-top: 15%;">
+                    <form method="POST" id="register_form" action="{{ url_for('register', user_type=user_type) }}">
+                        <div class="form-group">
+                            <input type="text" id="name" name="name" class="form-control" placeholder="Full Name" size="26" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" class="form-control" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Confirm password" required>
+                        </div>
+                        <div class="form-group card-button">
+                            <button type="submit" class="btn btn-primary btn-position-right">Sign up</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <div class="login">
+            <div class="card-style">
+                <h2 class="text-center mb-4">Login</h2>
+                <div class="card-content" style="margin-top: 25%;">
+                    <form method="POST" action="{{ url_for('login', user_type=user_type) }}">
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" class="form-control" placeholder="Email" size="26" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                        </div>
+                        <div class="form-group card-button">
+                            <button type="submit" class="btn btn-light btn-position-right">Sign in</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const passwordField = document.getElementById("password");
+            const confirmPasswordField = document.getElementById("confirm_password");
+            const registerForm = document.getElementById("register_form");
+        
+            confirmPasswordField.addEventListener("input", function () {
+                const password = passwordField.value;
+                const confirmPassword = confirmPasswordField.value;
+        
+                if (password === confirmPassword) {
+                    confirmPasswordField.setCustomValidity("");
+                } else {
+                    confirmPasswordField.setCustomValidity("Passwords do not match");
+                }
+            });
+        
+            registerForm.addEventListener("submit", function (e) {
+                if (!registerForm.checkValidity()) {
+                    e.preventDefault();
+                    alert("Error(s) in the registration form! Unable to submit...");
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
+
